@@ -10,14 +10,13 @@ Graph::Graph()
 
 void Graph::initial()
 {
-	//Ìî³ä±ßÈ¨ÖØÎª999£¬Á½±ß²»¿É´ï
+	//The weight of the filling edge is 999, and the two sides are not reachable
 	for (int i = 0; i < MAX; ++i) {
 		for (int j = 0; j < MAX; ++j) {
 			this->m_matrix[i][j] = 999;
 		}
 	}
 	//this->print();
-	//¶¥µã¿É´ïĞÔ£¬0Î´·ÃÎÊ£¬1ÒÑ¾­·ÃÎÊ
 	/*for (int k = 0; k < MAX; ++k) {
 	m_vertable.push_back(0);
 	}*/
@@ -35,7 +34,6 @@ void Graph::creat_arc()
 		j = g2.g_name;
 
 		weight = this->calculate_weight(g1, g2);
-		//Ìî³äÁÚ½Ó¾ØÕó
 		this->m_matrix[i][j] = weight;
 		m_matrix[j][i] = weight;
 	}
@@ -46,7 +44,6 @@ void Graph::creat_arc()
 
 void Graph::read()
 {
-	//¶ÁÈ¡±ß¼¯
 	ifstream ifs;
 	ifs.open(TEXT4, ios::in);
 	graph_node p1, p2;
@@ -59,7 +56,6 @@ void Graph::read()
 	ifs.close();
 	//cout << arc_set.size() << endl;
 
-	//¶ÁÈ¡¶¨µã
 	ifstream ifs2;
 	ifs2.open(TEXT1, ios::in);
 	graph_node p;
@@ -103,9 +99,7 @@ void Graph::print()
 
 void Graph::short_path(int S, int F)
 {
-	//Ç°Çı½Úµã±í
 	int ahead_node[MAX] = { 0 };
-	//ÆğÊ¼µãµ½¸ÃµãµÄ¾àÀë
 	float dis[MAX];
 	for (int k = 0; k < MAX; ++k) {
 		dis[k] = 9999;
@@ -114,10 +108,8 @@ void Graph::short_path(int S, int F)
 	float ahead_dis = 0;
 	this->m_vertable[S].g_visit = true;;
 	int s = S;
-	//µ½´ïÖÕµã½áÊø
 	int count = 0;
 	while (s != F) {
-		//±éÀú¸ÃµãµÄÁÚ½Úµã
 		for (int i = 0; i < MAX; ++i) {
 			float temp_dis = this->m_matrix[s][i] + ahead_dis;
 			if (dis[i] > temp_dis) {
@@ -125,7 +117,6 @@ void Graph::short_path(int S, int F)
 				ahead_node[i] = s;
 			}
 		}
-		//ÕÒµ½¾àÀë×î¶ÌÇÒÎ´·ÃÎÊ¹ıµÄ½Úµã
 		float t = 100;
 		int p = 0;
 		for (int j = 0; j < MAX; ++j) {
@@ -134,7 +125,6 @@ void Graph::short_path(int S, int F)
 				p = j;
 			}
 		}
-		//¸üĞÂ×î¶Ìµã
 		m_vertable[p].g_visit = true;
 		ahead_dis = dis[p];
 		s = p;
@@ -145,7 +135,6 @@ void Graph::short_path(int S, int F)
 	}
 	cout << endl;*/
 
-	//´òÓ¡Â·¾¶
 	int f = F;
 	stack<int> route;
 	route.push(f);
@@ -157,20 +146,17 @@ void Graph::short_path(int S, int F)
 			break;
 		}
 	}
-	//Êä³öÂ·¾¶
 	while (!route.empty()) {
 		cout << route.top() << " ";
 		route.pop();
 	}
 	cout << endl;
-	cout << "µü´ú´ÎÊı" << count << endl;
+	cout << "Number of iterationsï¼š" << count << endl;
 }
 
 void Graph::Heuristically_path(int S, int F)
 {
-	//Ç°Çı½Úµã±í
 	int ahead_node[MAX] = { 0 };
-	//ÆğÊ¼µãµ½¸ÃµãµÄ¾àÀë
 	float dis[MAX];
 	for (int k = 0; k < MAX; ++k) {
 		dis[k] = 9999;
@@ -179,10 +165,8 @@ void Graph::Heuristically_path(int S, int F)
 	float ahead_dis = 0;
 	this->m_vertable[S].g_visit = true;;
 	int s = S;
-	//µ½´ïÖÕµã½áÊø
 	int count = 0;
 	while (s != F) {
-		//±éÀú¸ÃµãµÄÁÚ½Úµã
 		for (int i = 0; i < MAX; ++i) {
 			float temp_his = calculate_forwardcost(F, i);
 			float temp_dis = this->m_matrix[s][i] + ahead_dis + temp_his;
@@ -191,7 +175,6 @@ void Graph::Heuristically_path(int S, int F)
 				ahead_node[i] = s;
 			}
 		}
-		//ÕÒµ½¾àÀë×î¶ÌÇÒÎ´·ÃÎÊ¹ıµÄ½Úµã
 		float t = 100;
 		int p = 0;
 		for (int j = 0; j < MAX; ++j) {
@@ -200,7 +183,6 @@ void Graph::Heuristically_path(int S, int F)
 				p = j;
 			}
 		}
-		//¸üĞÂ×î¶Ìµã
 		m_vertable[p].g_visit = true;
 		ahead_dis = dis[p];
 		s = p;
@@ -210,8 +192,6 @@ void Graph::Heuristically_path(int S, int F)
 	cout << m << " ";
 	}
 	cout << endl;*/
-
-	//´òÓ¡Â·¾¶
 	int f = F;
 	stack<int> route;
 	route.push(f);
@@ -223,13 +203,12 @@ void Graph::Heuristically_path(int S, int F)
 			break;
 		}
 	}
-	//Êä³öÂ·¾¶
 	while (!route.empty()) {
 		cout << route.top() << " ";
 		route.pop();
 	}
 	cout << endl;
-	cout << "µü´ú´ÎÊı" << count << endl;
+	cout << "è¿­ä»£æ¬¡æ•°" << count << endl;
 }
 
 float Graph::calculate_forwardcost(int F, int N)
@@ -237,7 +216,6 @@ float Graph::calculate_forwardcost(int F, int N)
 	graph_node f_p, n_p;
 	f_p = this->m_vertable[F];
 	n_p = m_vertable[N];
-	//¼ÆËãÇ°½ø´ú¼ÛÖµ
 	int x1, y1, x2, y2;
 	x1 = f_p.g_x;
 	y1 = f_p.g_y;
@@ -251,9 +229,7 @@ float Graph::calculate_forwardcost(int F, int N)
 
 void Graph::delete_arc(int a, int b)
 {
-	//ÏÔÊ¾µ±Ç°Á½µãÖ®¼äµÄ¹ØÏµ
 	cout << this->m_matrix[a][b] << endl;
-	//É¾³ı±ß¹ØÏµ
 	m_matrix[a][b] = 999;
 }
 
