@@ -27,22 +27,18 @@ void node_matching::read()
 
 void node_matching::Matches()
 {
-	//µ±Ç°½Úµã(±éÀúËùÓÐ½ÚµãÓëÖ®Æ¥Åä)
+	//Current node (traverse all nodes to match it) 
     graph_node temp1;
 	temp1 = this->point_list.front();
 	point_list.pop_front();
 
-	//Ã¿¸ö½ÚµãµÄÆ¥Åä½ÚµãÁÐ±í
 	deque<int> temp_list;
 	temp_list.clear();
-	//multimap´¢´æÒ»¶Ô±ßµÄ±àºÅ
 	multimap<int, int> arc_set;
 
 	while (!point_list.empty()) {
-		//±éÀú½ÚµãÑ°ÕÒÓëµ±Ç°½ÚµãÆ¥ÅäµÄ½Úµã
+		//Traverse the nodes to find the node that matches the current node
 		for (auto temp2 : this->point_list) {
-			//ÅÐ¶ÏÊÇ·ñÆ¥Åä
-			//±È½ÏÐÐ¾à£¬Èç¹û¸ôÐÐÁË£¬ÔòÒ»¶¨²»»áÆ¥Åä
 			if (abs(temp1.g_y - temp2.g_y) > rows_dis) {
 				break;
 			}
@@ -50,20 +46,15 @@ void node_matching::Matches()
 				temp_list.push_back(temp2.g_name);
 			}
 		}
-		//Êä³öÓëµ±Ç°µãµÄÆ¥Åäµã
-		//cout << "ºÍ" << temp1.name << " Æ¥ÅäµÄµãÓÐ£º";
 		for (auto t : temp_list) {
 			arc_set.insert(make_pair(temp1.g_name, t));
 		}
 		temp_list.clear();
-
-		//¸ÃµãµÄÆ¥Åä¼ì²âÍê¡¢»»ÏÂÒ»¸ö
 		temp1 = point_list.front();
 		point_list.pop_front();
 		//cout << point_list.size() << endl;
 	}
-	//½á¹ûÊä³ö
-	cout << "±ß¼¯¸öÊý£º";
+	cout << "Number of edge setsï¼š";
 	cout << arc_set.size() << endl;
 	this->write(arc_set);
 }
@@ -73,7 +64,6 @@ bool node_matching::matches(graph_node &n1, graph_node &n2)
 	int x1, x2;
 	x1 = n1.g_x;
 	x2 = n2.g_x;
-	//±È½ÏÁÐ¾à
 	if (abs(x1 - x2) < cols_dis) {
 		return true;
 	}
