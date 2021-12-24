@@ -3,15 +3,15 @@
 
 node_generate::node_generate(string path)
 {
-	//³õÊ¼»¯½á¹¹ÌåÔªËØ
+	//Initialize structure elements
 	for (int i = 0; i < ks; ++i) {
 		for (int j = 0; j < ks; ++j) {
 			this->kernel[i][j] = 255;
 		}
 	}
-	//¶ÁÈ¡Í¼Ïñ
+	//Read img
 	this->ori_map = imread(path, 0);
-	//»ñÈ¡Í¼Ïñ³¤¿î
+	//obtain row,col of img
 	this->m_row = this->ori_map.rows;
 	this->m_cols = this->ori_map.cols;
 	cout << this->m_row << " " << this->m_cols << endl;
@@ -25,35 +25,32 @@ node_generate::node_generate(string path)
 
 void node_generate::image_processing()
 {
-	//´¢´æ¶şÖµ»¯Í¼Æ¬
 	Mat bin_map;
-	//´¢´æÅòÕÍºóµÄÍ¼Æ¬
 	Mat dil_map;
 	//Mat dil_map2;
 	//Mat dil_map3;
 
-	//Í¼Æ¬¶şÖµ»¯´¦Àí
+	//Image binarization processing
 	cv::threshold(this->ori_map, bin_map, 200, 255, THRESH_BINARY);
 	cv::imwrite(IMAGE6, bin_map);
-	//ÅòÕÍºÍ¸¯Ê´µÄÄ£°å
+	//Expansion and corrosion template
 	Mat element = cv::getStructuringElement(MORPH_RECT, Size(3, 3), Point(-1, -1));
 	Mat element2 = cv::getStructuringElement(MORPH_RECT, Size(5, 5), Point(-1, -1));
 
-	//ÅòÕÍ²Ù×÷(ÊÇÕë¶Ô´óµÄÏñËØÖµµÄ£¬¶ÔÓÚµØÍ¼¾ÍÊÇ°×É«ÇøÓòÊÇÅòÕÍµÄ)¶ÔÓÚºÚµÄ²¿·ÖÀ´ËµÏñ¸¯Ê´
+	//The expansion operation (for large pixel values
+        //the white area is expanded for the map) is like corrosion for the black part
 	dilate(bin_map, dil_map, element);
-	//¸¯Ê´²Ù×÷£¬¶ÔÓÚºÚµÄÀ´ËµÏñÅòÕÍ²Ù×÷
+	//Corrosion operation, like expansion operation for black
 	//erode(dil_map, dil_map2, element);
 	//dilate(dil_map2, dil_map3, element);
 	erode(dil_map, this->node_map, element);
 
 	cv::imwrite(IMAGE7, this->node_map);
-	//ĞŞ²¹Í¼ÏñµÄËÄÖÜ
+	//Patch the surroundings of the image
 	//this->Edge_trimming(node_map);
 	//cv::imwrite(IMAGE8, this->node_map);
-	//¿½±´Ò»·İµØÍ¼
 	this->node_map2 = this->node_map.clone();
 
-	//ÏÔÊ¾Í¼Ïñ
 	//cv::namedWindow("map2", CV_WINDOW_NORMAL);
 	//imshow("map2", bin_map);
 	//cv::namedWindow("map3", CV_WINDOW_NORMAL);
@@ -68,7 +65,6 @@ void node_generate::Edge_trimming(Mat &m)
 {
 	int count1;
 	int count2;
-	//ÉÏ±ßĞŞÕû£¬Óöµ½×ÔÓÉÇøÓò½áÊø
 	int row = 0;
 	while (true) {
 		count1 = 0;
@@ -76,11 +72,9 @@ void node_generate::Edge_trimming(Mat &m)
 		for (int j = 0; j < this->m_cols; ++j)
 		{
 			if (m.at<uchar>(row, j) == 255) {
-				//°×É«¸öÊı
 				count1++;
 			}
 			if (m.at<uchar>(row + 1, j) == 255) {
-				//°×É«¸öÊı
 				count2++;
 			}
 		}
@@ -94,8 +88,6 @@ void node_generate::Edge_trimming(Mat &m)
 		}
 		row++;
 	}
-
-	//ÏÂ±ßĞŞÕû
 	row = this->m_row - 1;
 	while (true) {
 		count1 = 0;
@@ -103,11 +95,9 @@ void node_generate::Edge_trimming(Mat &m)
 		for (int i = 0; i < this->m_cols; ++i)
 		{
 			if (m.at<uchar>(row, i) == 255) {
-				//°×É«¸öÊı
 				count1++;
 			}
 			if (m.at<uchar>(row - 1, i) == 255) {
-				//°×É«¸öÊı
 				count2++;
 			}
 		}
@@ -120,7 +110,6 @@ void node_generate::Edge_trimming(Mat &m)
 		}
 		row--;
 	}
-	//×ó±ßĞŞÕû
 	int cols = 0;
 	while (true) {
 		count1 = 0;
@@ -128,11 +117,9 @@ void node_generate::Edge_trimming(Mat &m)
 		for (int k = 0; k < this->m_row; ++k)
 		{
 			if (m.at<uchar>(k, cols) == 255) {
-				//°×É«¸öÊı
 				count1++;
 			}
 			if (m.at<uchar>(k, cols+1) == 255) {
-				//°×É«¸öÊı
 				count2++;
 			}
 		}
@@ -145,8 +132,6 @@ void node_generate::Edge_trimming(Mat &m)
 		}
 		cols++;
 	}
-
-	//ÓÒ±ßĞŞÕû
 	cols = this->m_cols-1;
 	while (true) {
 		count1 = 0;
@@ -154,11 +139,9 @@ void node_generate::Edge_trimming(Mat &m)
 		for (int g = 0; g < this->m_row; ++g)
 		{
 			if (m.at<uchar>(g, cols) == 255) {
-				//°×É«¸öÊı
 				count1++;
 			}
 			if (m.at<uchar>(g, cols - 1) == 255) {
-				//°×É«¸öÊı
 				count2++;
 			}
 		}
@@ -193,11 +176,10 @@ void node_generate::trimming(int r, int val, Mat &m)
 
 int node_generate::traverse_node(int a, int b)
 {
-	//¸ÃµãµÄÆ¥Åä½á¹û
 	int R = 0;
 	int y = a - kr;
 	int x = b - kr;
-	//±éÀú½á¹¹ÌåÔªËØ£¬¼ÆËãÆ¥Åä¶È
+	//Traverse the structure elements and calculate the response value
 	for (int i = 0; i < ks; ++i) {
 		for (int j = 0; j < ks; ++j) {
 			R = R + (this->kernel[i][j] - this->node_map.at<uchar>(y + i, x + j));
@@ -208,10 +190,8 @@ int node_generate::traverse_node(int a, int b)
 
 deque<NODE> node_generate::generate_node()
 {
-	//´´½¨½Úµã±£´æ¶ÓÁĞ¡¢½Úµã
 	deque<NODE> temp;
 	NODE p;
-	//±éÀúËùÓĞÏñËØ(Ôö¼ÓÌøÔ¾)
 	for (int i = this->first + kr; i < leap_dis*(this->m_row / leap_dis); i += leap_dis) {
 		for (int j = kr; j < this->m_cols - kr; ++j) {
 			int r = this->traverse_node(i, j);
@@ -224,7 +204,6 @@ deque<NODE> node_generate::generate_node()
 		}
 	}
 
-	//±éÀúËùÓĞÏñËØ£¬Ã»ÓĞÌøÔ¾
 	/*for (int k = kr; k < this->m_row-kr; ++k) {
 	for (int g = kr; g < this->m_cols - kr; ++g) {
 	int r = this->match(k, g);
@@ -234,22 +213,20 @@ deque<NODE> node_generate::generate_node()
 	}
 	}*/
 
-	////Éú³ÉµÄ½Úµã¶ÓÁĞ¸öÊı
-	//cout << "Éú³ÉµÄ½Úµã¸öÊı: ";
-	//cout << temp.size() << endl;
+	cout << "Number of generated nodes: ";
+	cout << temp.size() << endl;
 
-	//ÏÔÊ¾½ÚµãÉú³É½á¹û
+	//æ˜¾ç¤ºèŠ‚ç‚¹ç”Ÿæˆç»“æœ
 	/*cv::namedWindow("map4", CV_WINDOW_NORMAL);
 	imshow("map4", node_map);
 	waitKey(0);*/
 
 	vector<int> compression_params;
-	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION); //PNG¸ñÊ½Í¼Æ¬µÄÑ¹Ëõ¼¶±ğ  
-	compression_params.push_back(9);  //ÕâÀïÉèÖÃ±£´æµÄÍ¼ÏñÖÊÁ¿¼¶±ğ
+	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION); 
+	compression_params.push_back(9); 
 
-	//±£´æÍ¼Ïñ
 	cv::imwrite(IMAGE3, this->node_map, compression_params);
-	////½ÚµãĞ´ÈëÎÄ±¾
+	//Node write text
 	//this->write(temp);
 	return temp;
 }
@@ -272,7 +249,6 @@ void node_generate::result()
 		this->node_map2.at<uchar>(k.x, k.y) = 0;
 	}
 
-	////¼ò»¯ºóĞ´Èë½Úµã
 	int t = this->m_row;
 	ofstream ofs;
 	ofs.open(TEXT3, ios::out);
@@ -283,66 +259,64 @@ void node_generate::result()
 	}
 	ofs.close();
 	vector<int> compression_params;
-	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION); //PNG¸ñÊ½Í¼Æ¬µÄÑ¹Ëõ¼¶±ğ  
-	compression_params.push_back(9);  //ÕâÀïÉèÖÃ±£´æµÄÍ¼ÏñÖÊÁ¿¼¶±ğ
+	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+	compression_params.push_back(9); 
 	cv::imwrite(IMAGE4, this->node_map2, compression_params);
 
 	cv::namedWindow("map4", CV_WINDOW_NORMAL);
 	imshow("map4", node_map2);
 	waitKey(0);
 }
+// void node_generate::ang_point()
+// {
+// 	//åˆå§‹åŒ–æ¨¡æ¿å…ƒç´ 
+// 	this->k_point[0][0] = 1;
+// 	this->k_point[0][2] = 1;
+// 	this->k_point[1][1] = -5;
+// 	this->k_point[2][0] = 1;
+// 	this->k_point[2][2] = 1;
 
-//½Çµã¼ì²â
-void node_generate::ang_point()
-{
-	//³õÊ¼»¯Ä£°åÔªËØ
-	this->k_point[0][0] = 1;
-	this->k_point[0][2] = 1;
-	this->k_point[1][1] = -5;
-	this->k_point[2][0] = 1;
-	this->k_point[2][2] = 1;
+// 	int N;
+// 	NODE temp;
+// 	deque<NODE> point_list;
+// 	//éå†å›¾åƒå…ƒç´ 
+// 	for (int i = 1; i < this->m_row - 1; i++) {
+// 		for (int j = 1; j < this->m_cols - 1; j++) {
+// 			N = this->match_ang_point(i, j);
+// 			if (N == 765) {
+// 				temp.y = i;
+// 				temp.x = j;
+// 				point_list.push_back(temp);
+// 			}
+// 		}
+// 	}
 
-	int N;
-	NODE temp;
-	deque<NODE> point_list;
-	//±éÀúÍ¼ÏñÔªËØ
-	for (int i = 1; i < this->m_row - 1; i++) {
-		for (int j = 1; j < this->m_cols - 1; j++) {
-			N = this->match_ang_point(i, j);
-			if (N == 765) {
-				temp.y = i;
-				temp.x = j;
-				point_list.push_back(temp);
-			}
-		}
-	}
+// 	//è¾“å‡ºåæ ‡ç‚¹åˆ—è¡¨
+// 	/*cout << this->point_list.size() << "å¯¹" << endl;
+// 	for (auto g : this->point_list) {
+// 	cout << g.x << "," << g.y << endl;
+// 	}*/
 
-	//Êä³ö×ø±êµãÁĞ±í
-	/*cout << this->point_list.size() << "¶Ô" << endl;
-	for (auto g : this->point_list) {
-	cout << g.x << "," << g.y << endl;
-	}*/
+// 	ofstream ofs;
+// 	ofs.open(TEXT2, ios::out);
+// 	for (auto w : point_list) {
+// 		ofs << w.y << " " << w.x << endl;
+// 	}
+// 	ofs.close();
 
-	ofstream ofs;
-	ofs.open(TEXT2, ios::out);
-	for (auto w : point_list) {
-		ofs << w.y << " " << w.x << endl;
-	}
-	ofs.close();
+// }
 
-}
-
-int node_generate::match_ang_point(int a, int b)
-{
-	int n = 0;
-	int y = a - 1;
-	int x = b - 1;
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
-			n = n + k_point[i][j] * this->node_map.at<uchar>(y + i, x + j);
-		}
-	}
-	return n;
+// int node_generate::match_ang_point(int a, int b)
+// {
+// 	int n = 0;
+// 	int y = a - 1;
+// 	int x = b - 1;
+// 	for (int i = 0; i < 3; ++i) {
+// 		for (int j = 0; j < 3; ++j) {
+// 			n = n + k_point[i][j] * this->node_map.at<uchar>(y + i, x + j);
+// 		}
+// 	}
+// 	return n;
 }
 
 //void Image::write(deque<NODE> &n)
