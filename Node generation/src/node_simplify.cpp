@@ -7,60 +7,50 @@ node_simplify::node_simplify(deque<NODE> &n)
 	//this->ang_point_read();
 	this->ori_node_deq = n;
 	//this->read();
-	cout << "½ÚµãÊýÁ¿£º ";
+	cout << "Number of nodesï¼š ";
 	cout << this->ori_node_deq.size() << endl;
 	this->Simplify();
 }
 
 void node_simplify::Simplify()
 {
-	//°´ÐÐ¼ò»¯½Úµã
+	//Simplify nodes by row
 	NODE T1;
-	//×÷ÎªÃ¿ÐÐÍ·½ÚµãµÄ×ø±ê
 	int pre_y = 0;
 	int pre_x = 0;
 	this->m_top = this->ori_node_deq.front();
 	while (!this->ori_node_deq.empty()) {
-		//»ñÈ¡Í·²¿
 		T1 = this->ori_node_deq.front();
-		//ÅÐ¶ÏÊÇ·ñ»»ÐÐ
 		if (pre_y != T1.y) {
 			this->deque_full();
 		}
-		//Ã¿ÐÐµÄµÚÒ»¸ö
 		if (this->temp_deq.empty()) {
 			this->temp_deq.push_back(T1);
-			//ÐÐ×ø±ê
 			pre_y = T1.y;
-			//ÁÐ×ø±ê
 			pre_x = T1.x;
 
 		}
-		//Í¬ÐÐÖÐ°´ÕÕ¾àÀëÉ¸Ñ¡
 		else if (pre_y == T1.y && (pre_x + dis) <= T1.x) {
 			this->temp_deq.push_back(T1);
 			pre_x = T1.x;
 		}
-		//³ö¶Ó
 		this->ori_node_deq.pop_front();
 	}
 	this->deque_full();
 
 
-	/*cout << "Ô­Ê¼½ÚµãÊýÁ¿£º ";
+	/*cout << "Number of original nodesï¼š ";
 	cout << this->ori_node_deq.size() << endl;
-	cout << "ÁÙÊ±½ÚµãÊýÁ¿£º ";
+	cout << "Number of temporary nodesï¼š ";
 	cout << this->temp_deq.size() << endl;
-	cout << "¼ò»¯½ÚµãÊýÁ¿£º ";
+	cout << "Simplify the number of nodesï¼š ";
 	cout << this->fin_node_deq.size() << endl;*/
-	/*cout << "ÌØÕ÷½ÚµãÊýÁ¿£º ";
+	/*cout << "Feature node numberï¼š ";
 	cout << this->type_node.size() << endl;
 	for (auto k : this->type_node) {
 	cout << k.y << "," << k.x << endl;
 	}*/
 
-	//±£´æ½á¹û
-	//¼ò»¯ºóÐ´Èë½Úµã(ÐÐ ÁÐ)
 	int num = 0;
 	ofstream ofs;
 	ofs.open(TEXT1, ios::out);
@@ -73,42 +63,36 @@ void node_simplify::Simplify()
 
 void node_simplify::deque_full()
 {
-	//½«Ã¿ÐÐµÄ½Úµã±£´æÖÁ×îºóµÄ¶ÓÁÐÖÐ
+	//Save the nodes of each row to the last queue
 	//NODE temp2;
 	if (this->fin_node_deq.empty()) {
 		this->fin_node_deq = this->temp_deq;
 		this->temp_deq.clear();
 	}
 	else {
-		////Ôö¼ÓÁÐ±ä»»
-		//temp2 = this->temp_deq.front();
-		////Ìí¼Ó½ÇµãµÄÏÞÊ±
-		//if (abs(temp2.x - m_top.x) > dis || abs(temp2.y - m_top.y) > dis) {
-		//	this->m_top = temp2;
-		//	if (!this->ang_point.empty()) {
-		//		if (abs(this->ang_point.front().x - temp2.x) <= 16 ) {
-		//			this->choose();
-		//		}
-		//	}
-		//	while (!this->temp_deq.empty()) {
-		//		this->fin_node_deq.push_back(this->temp_deq.front());
-		//		this->temp_deq.pop_front();
-		//	}
-		//}
-
-		//Èç¹û²»ÐèÒªÁÐ±ä»¯
-		////Ìí¼Ó½ÇµãµÄÏÞÖÆ
-		//if (!this->ang_point.empty()) {
-		//	/*cout << "½Çµã¸öÊý";
-		//	cout << ang_point.size() << endl;*/
-		//	if (abs(this->ang_point.front().x - temp2.x) <= 16 ) {
-		//		this->choose();
-		//	}
-		//}
-		while (!this->temp_deq.empty()) {
-			this->fin_node_deq.push_back(this->temp_deq.front());
-			this->temp_deq.pop_front();
+		temp2 = this->temp_deq.front();
+		if (abs(temp2.x - m_top.x) > dis || abs(temp2.y - m_top.y) > dis) {
+			this->m_top = temp2;
+			if (!this->ang_point.empty()) {
+				if (abs(this->ang_point.front().x - temp2.x) <= 16 ) {
+					this->choose();
+				}
+			}
+			while (!this->temp_deq.empty()) {
+				this->fin_node_deq.push_back(this->temp_deq.front());
+				this->temp_deq.pop_front();
+			}
 		}
+		if (!this->ang_point.empty()) {
+			cout << ang_point.size() << endl;*/
+			if (abs(this->ang_point.front().x - temp2.x) <= 16 ) {
+				this->choose();
+			}
+		}
+// 		while (!this->temp_deq.empty()) {
+// 			this->fin_node_deq.push_back(this->temp_deq.front());
+// 			this->temp_deq.pop_front();
+// 		}
 		this->temp_deq.clear();
 	}
 }
@@ -135,7 +119,6 @@ void node_simplify::ang_point_read()
 	ifs.close();
 	cout << point_list.size() << endl;
 
-	//½ÇµãµÄÆ¥Åä
 	NODE p1, p2, p3;
 	while (!point_list.empty()) {
 		p1 = point_list.front();
