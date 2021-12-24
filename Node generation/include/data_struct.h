@@ -1,22 +1,14 @@
 #pragma once
-//½ÚµãÊı¾İ½á¹¹Ìå
 struct NODE {
-	//½ÚµãµÄÏñËØ×ø±ê
-	int y, x;//(ĞĞ£¬ÁĞ)
+	int y, x;//(è¡Œï¼Œåˆ—)
 };
-
-//ÍØÆËµØÍ¼ÖĞµÄ½Úµã
 struct graph_node
 {
-	//½Úµã×ø±ê
 	int g_x, g_y;
-	//½ÚµãĞòºÅ
 	int g_name;
-	//½Úµã·ÃÎÊÈ¨ÏŞ
 	bool g_visit;
 
 };
-//×Ô¶¨ÒåÊı¾İµÄÅÅĞò¹æÔò
 struct Cmp
 {
 	bool operator () (graph_node const &a, graph_node const &b)const
