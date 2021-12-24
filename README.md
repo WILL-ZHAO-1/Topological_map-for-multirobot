@@ -1,1 +1,11 @@
 # Topological-map-for-multi-robot
+## 1.INTRODUCTION
+A method called the Surplus Topology Generation Algorithm(STGA) for constructing a global topological map based on grid map representation, which realizes global scheduling among multiple robots based on the constructed topological relationship and eventually solves the path conflict problem among robots. First, Node-Filter is used on the environmental grid map to generate as many candidate nodes that satisfy the robot size in the grid map based on the robot size informationand sparse the set of candidate nodes by Node-Selection. Next, for the main scenarios of multi-robot path conflict problem, e. g., N-S-R and C-R. We extract the Harris corner point information from the grid map and combine it with the corresponding matching strategy to select the corner point combinations that can characterize the above features. Then a mapping relationship will be established with the generated nodes, to express the features by node combinations. Finally, the global topological map is constructed on the basis of the grid map by combining the node information and the reachable relationship between the nodes. 
+## 2.HELP
+ (1).  ***Node generation*** is the code used to generate nodes. The parameters for node generation can be set in the 'globa.h' file, such as the size information of the filter template and the parameters for node matching. The generation of nodes requires a grid map of the environment, and ***the resolution and origin of the grid map*** also need to be notified in advance.
+
+Based on the topological map information, two global shortest path search algorithms are designed. The global path can be solved by calling the sequence numbers of the starting and ending nodes in the global topological map.
+ 
+ (2). ***Harris extraction*** is to extract the features of the corner points in the map. Input the processed binarized map and output all the corner points in the map.
+ 
+ (3). ***Topological map*** provides a graphical display of the global topology map. Input the node information and edge set information obtained by the ***Node generation*** **(tran_node.txt; match_node.txt;final.png)**, and can output a visualized global topology map and node label.
