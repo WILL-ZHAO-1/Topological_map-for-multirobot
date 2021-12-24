@@ -1,6 +1,6 @@
 #pragma once
 struct NODE {
-	int y, x;//(行，列)
+	int y, x;//
 };
 struct graph_node
 {
